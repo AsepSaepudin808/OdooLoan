@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="hr_loan_loan_view_tree" model="ir.ui.view">
+        <field name="name">hr.loan.loan.view.tree</field>
+        <field name="model">hr.loan</field>
+        <field name="arch" type="xml">
+            <tree string="Loan Management" default_order="name asc" decoration-success="state in ['approved', 'done']" 
+                decoration-info="state == 'draft'" decoration-danger="state == 'rejected'">
+                
+                <field name="name" force_save="1" readonly="1"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="employee_id" readonly="1"/>
+                <field name="department_id" readonly="1" optional="hide"/>
+                <field name="loan_approver_id" readonly="1"/>
+                <field name="loan_type" widget="badge" decoration-success="loan_type in ['petty_cash']" 
+                                                        decoration-warning="loan_type in ['loan']"/>
+                <field name="loan_amount" optional="show"/>
+                <field name="manager_id" optional="hide"/>
+                <field name="state" widget="badge" decoration-success="state in ['approved', 'done']" 
+                                                    decoration-info="state == 'draft'" decoration-warning="state == 'confirm'" 
+                                                    decoration-danger="state == 'rejected'"/>
+                <field name="company_id" optional="hide"/>
+                <field name="currency_id" invisible="1"/>
+
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="hr_loan_loan_view_form" model="ir.ui.view">
+        <field name="name">hr.loan.loan.view.form</field>
+        <field name="model">hr.loan</field>
+        <field name="arch" type="xml">
+            <form string="Loan Detail">
+
+                <header>
+                    <field name="is_approver" invisible="1" force_save="1" readonly="1"/>
+                    <button string="Confirm" name="action_confirm"  type="object" class="oe_highlight" states="draft"/>
+                    <button string="Set to Draft" name="action_set_to_draft" type="object" class="oe_hinghlight" states="confirm,rejected"/>
+                    <button string="Approve" name="action_approve" type="object" class="oe_highlight"
+                                            attrs="{'invisible':['|', ('state', '!=', 'confirm'), ('is_approver', '=', False)]}"/>
+                    <button string="Rejected" name="action_rejected" type="object"
+                                            class="oe_highlight btn btn-danger text-upercase font-weight-bold"
+                                            attrs="{'invisible':['|', ('state','!=', 'confirm'), ('is_approver', '=', False)]}"/>
+                    <button string="Loan Report" name="action_loan_report" type="object" class="oe_highlight" states='approved,done'/>
+                    <button string="Export Loan Report" name="action_open_loan_report" type="object" class="btn btn-secondary text-uppercase font-weight-bold" states='approved,done'/>
+                    <!-- <button string="Edit departmen" name="action_add_employee" type="object" class="btn btn-secondary text-uppercase font-weight-bold"/> -->
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,approved,done,rejected"/>
+
+                </header>
+
+                <sheet>
+                    <div class="oe_button_box" name="button_box" attrs="{'invisible':[('state', '!=', 'approved')]}">
+                        <button name="action_load_loan_details" type="object" class="oe_stat_button" icon="fa-info">
+                            <field name="loan_line_count" string="Loan Line" widget="statinfo"/>
+                        </button>
+                    </div>
+                    
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" force_save="1" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <group string="General Information" name="general_information">
+                        <group style="width:60%;" >
+                            <field name="loan_type" force_save="1" readonly="1"/>
+                            <label for="start_date" string="Period"/>
+                            <div>
+                                <field name="start_date" required="1" class="oe_inline" attrs="{'readonly': [('state', '!=', 'draft')]}"/> - <field name="end_date" required="1" class="oe_inline" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            </div>
+                            <field name="employee_id" required="1" options="{'no_create' : True, 'no_open' : True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="department_id" force_save="1" readonly="1" options="{'no_create' : True, 'no_open' : True}"/>
+                            <field name="manager_id" force_save="1" readonly="1" options="{'no_create' : True, 'no_open' : True}"/>
+                            <field name="loan_approver_id" required="1" force_save="1" readonly="1" options="{'no_create' : True, 'no_open' : True}" attrs="{'readonly': [('state', '=', 'draft')]}"/>
+                        </group>
+
+                        <group style="width:40%;">
+                            <field name="loan_amount" attrs="{'readonly': ['|',('employee_id', '=', False), ('loan_approver_id', '=', False)], 
+                                                    'required': ['&amp;',('employee_id', '=', True),('loan_approver_id', '=', True)]}"/>
+                            <field name="company_id" force_save="1" readonly="1" invisible="1"
+                                                    options="{'no_open': True, 'no_create': True}"/>
+                            <field name="currency_id" force_save="1" readonly="1" invisible="1"
+                                                    options="{'no_open': True, 'no_create': True}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Loan Detail">
+                            <field name="line_ids" force_save="1" readonly="1" context="{'tree_view_ref':'arkana_loan_management.hr_loan_line_view_tree'}"/>
+                        </page>
+                    </notebook>
+                </sheet>
+
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="hr_loan_loan_view_search" model="ir.ui.view">
+        <field name="name">hr.loan.loan.view.search</field>
+        <field name="model">hr.loan</field>
+        <field name="arch" type="xml">
+            <search string="Loan Search">
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <separator/>
+
+                <filter string="Draft" name="draft_state" domain="[('state', '=', 'draft')]"/>
+                <filter string="Approved" name="approved_state" domain="[('state', '=', 'approved')]"/>
+                <filter string="Rejected" name="rejected_state" domain="[('state', '=', 'rejected')]"/>
+                <filter string="Confirm" name="confirm_state" domain="[('state', '=', 'confirm')]"/>
+                <separator/>
+
+                <filter name="month" string="This Month" domain="['&amp;', ('start_date', '&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d')), ('start_date', '&lt;=', (context_today() + relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d'))]"/>
+                <filter name="last_month" string="Last Month" domain="['&amp;', ('start_date', '&gt;=', (context_today() + relativedelta(months=-1, day=1)).strftime('%Y-%m-%d')), ('start_date', '&lt;=', (context_today() + relativedelta(day=1, days=-1)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+
+                <group expand="0" string="Group By">
+                    <filter string="Employee" name="group_by_employee_id" domain="[]" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Department" name="group_by_department_id" domain="[]" context="{'group_by': 'department_id'}"/>
+                    <filter string="Date" name="group_by_start_date" domain="[]" context="{'group_by': 'start_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action View -->
+    <record id="hr_loan_loan_action" model="ir.actions.act_window">
+        <field name="name">Loan Management</field>
+        <field name="res_model">hr.loan</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="arkana_loan_management.hr_loan_loan_view_search"/>
+        <field name="view_id" ref="arkana_loan_management.hr_loan_loan_view_tree"/>
+        <field name="domain">[('loan_type', '=', 'loan')]</field>
+        <field name="context">{'default_loan_type' : 'loan'}</field>
+        <field name="help" type="html">
+            <p/>
+        </field>
+    </record>
+
+    <!-- Action Search View Tree-->
+    <record id="hr_loan_loan_action_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="act_window_id" ref="hr_loan_loan_action"/>
+        <field name="view_id" ref="hr_loan_loan_view_tree"/>
+    </record>
+
+    <!-- Action Search View Form -->
+    <record id="hr_loan_loan_action_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">form</field>
+        <field name="act_window_id" ref="hr_loan_loan_action"/>
+        <field name="view_id" ref="hr_loan_loan_view_form"/>
+    </record>
+
+
+</odoo>

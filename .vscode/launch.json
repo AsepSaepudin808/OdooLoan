@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Arkana Training",
+            "type": "debugpy",
+            "request": "launch",
+            "stopOnEntry": false,
+            "console": "integratedTerminal",
+            "python": "/home/orionstrix/odoo/odoo16-env/bin/python", // cari dengan which python3
+            "program": "/home/orionstrix/odoo/odoo/odoo-bin",
+            "args": [
+                "--config=/home/orionstrix/odoo/conf/arkana-training.conf",
+                "--dev=xml",
+                "--database=odoo16_arkana_training",
+                "--update=arkana_base_training,arkana_loan_management,arkana_partner",
+            ]
+        },
+    ]
+}

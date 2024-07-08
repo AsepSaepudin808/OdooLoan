@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_family_category_user_rule" model="ir.rule">
+        <field name="name">Family Category Multi Company</field>
+        <field name="model_id" ref="arkana_base_training.model_hr_family_category"/>
+        <field name="domain_force">['|',('company_id', 'in', company_ids), ('company_id', '=', False)]</field>
+    </record>
+
+    <record id="hr_average_effective_rate_user_rule" model="ir.rule">
+        <field name="name">TER Multi-company</field>
+        <field name="model_id" ref="arkana_base_training.model_hr_average_effective_rate"/>
+        <field name="domain_force">['|',('company_id', 'in', company_ids), ('company_id', '=', False)]</field>
+    </record>
+
+    <!-- <record model="ir.rule" id="hr_average_effective_rate_user_rule">
+        <field name="name">TER Multi-company</field>
+        <field name="model_id" ref="arkana_base_training.model_hr_average_effective_rate"/>
+        <field name="domain_force">['|'('company_id', 'in', user.maped('company_ids.id')), ('company_id', '=', False)]</field>
+    </record>
+
+    <record model="ir.rule" id="hr_category_user_rule">
+        <field name="name">Family Category Multi company</field>
+        <field name="model_id" ref="arkana_base_training.model_hr_family_category"/>
+        <field name="domain_force">['|'('company_id', 'in', user.maped('company_ids.id')), ('company_id', '=', False)]</field>
+    </record> -->
+
+</odoo>

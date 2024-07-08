@@ -1,0 +1,107 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    
+    <!-- viewstree rate   -->
+    <record id="hr_average_effective_rate_view_tree" model="ir.ui.view">
+        <field name="name">hr.average.effective.rate.view.tree</field>
+        <field name="model">hr.average.effective.rate</field>
+        <field name="arch" type="xml">
+            <tree string="TER Information">
+                <field name="name"/>
+                <field name="line_ids_count"/>
+                <field name="company_id"/> 
+
+            </tree>
+        </field>
+    </record>
+
+    <!-- views form rate -->
+    <record id="hr_average_effective_rate_view_form" model="ir.ui.view">
+        <field name="name">hr.average.effective.rate.view.form</field>
+        <field name="model">hr.average.effective.rate</field>
+        <field name="arch" type="xml">
+            <form string="TER Detail Info">
+                <sheet>
+
+                    <div class="oe_title">
+                        <label for="name" />
+                        <h1><field
+                            name="name"
+                            required="1"
+                            placeholder="e.g. A"
+                        /></h1>
+                    </div>
+
+                    <group name="line_ids_count" string="General/ Information"> 
+                        <field name="line_ids_count"/>
+                        <field name="company_id" readonly="1" 
+                            options="{'no_create' : True, 'no_open' : True}"/> 
+                        <field name="currency_id" readonly="1" options="{'no_create' : True, 'no_open' : True}"/>
+                    </group>
+
+                    <notebook>
+                        <page string="TER Rules Detail" name="ter_rules_detail">
+                            <field name="line_ids" class="mx-1">
+                                <tree editable="bottom">
+                                    <field name="average_effective_rate_id" readonly="1" invisible="1" 
+                                        options="{'no_create' : True, 'no_open' : True}" />
+                                    <field name="currency_id" readonly="1" invisible="1" 
+                                        options="{'no_create' : True, 'no_open' : True}" />
+                                    <field name="sequence" readonly="1" invisible="1" />
+                                    <field name="minimal_amount" widget="monetary" 
+                                        options="{'currency_field': 'currency_id'}"/>
+                                    <field name="maximum_amount" widget="monetary" 
+                                        options="{'currency_field': 'currency_id'}"/>
+                                    <field name="percentage"/>
+                                </tree>
+                                <form>
+                                    <group>
+                                    <field name="minimal_amount" widget="monetary" 
+                                        options="{'currency_field' : 'currancy_id'}" />
+                                    <field name="maximum_amount" widget="monetary" 
+                                        options="{'currency_field' : 'currancy_id'" />
+                                    <field name="percentage" readonly="1" invisible="1"
+                                        options="{'currency_field': 'currency_id'}"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_average_effective_rate_action" model="ir.actions.act_window">
+        <field name="name">TER Information</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.average.effective.rate</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p/>
+        </field>
+    </record>
+
+    <record id="hr_average_effective_rate_action_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="act_window_id" ref="hr_average_effective_rate_action"/>
+        <field name="view_id" ref="hr_average_effective_rate_view_tree"/>
+    </record>
+
+    <record id="hr_average_effective_rate_action_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">form</field>
+        <field name="act_window_id" ref="hr_average_effective_rate_action"/>
+        <field name="view_id" ref="hr_average_effective_rate_view_form"/>
+    </record>
+    
+    <menuitem id="menu_action_average_effective_rate" 
+        name="TER Information" 
+        action="hr_average_effective_rate_action" 
+        parent="hr.menu_config_employee" sequence="99" groups="hr.group_hr_manager" />
+nu
+</odoo>

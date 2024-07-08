@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_loan_user_rule" model="ir.rule">
+        <field name="name">HR Loan Multi Company</field>
+        <field name="model_id" ref="arkana_loan_management.model_hr_loan"/>
+        <field name="domain_force">['|',('company_id', 'in', company_ids), ('company_id', '=', False)]</field>
+    </record>
+
+    <record id="hr_loan_line_user_rule" model="ir.rule">
+        <field name="name">HR Loan Multi Company</field>
+        <field name="model_id" ref="arkana_loan_management.model_hr_loan"/>
+        <field name="domain_force">['|',('company_id', 'in', company_ids), ('company_id', '=', False)]</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,41 @@
+<odoo>
+    <data>
+
+        <!-- Definisi tampilan form untuk wizard -->
+        <record id="view_partner_wizard_form" model="ir.ui.view">
+            <field name="name">arkana.partner.wizard.form</field>
+            <field name="model">arkana.partner.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <!-- Group untuk menampilkan fields pada form -->
+                    <group>
+                        <!-- Field selection untuk memilih antara Category atau Product -->
+                        <field name="wizard_selection"/>
+                    </group>
+
+                    <!-- Tombol aksi: Apply untuk menjalankan wizard dan Cancel untuk membatalkan -->
+                    <footer>
+                        <button string="Apply" type="object" class="oe_highlight" name="apply_wizard"/>
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Konfigurasi aksi untuk memanggil form wizard -->
+        <record id="action_partner_wizard" model="ir.actions.act_window">
+            <field name="name">Select Categories and Products</field>
+            <field name="res_model">arkana.partner.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <!-- Menu untuk memanggil wizard dari menu Contacts -->
+        <menuitem
+            id="action_partner_wizard_api"
+            name="Wizard"
+            parent="stock.menu_stock_warehouse_mgmt"
+            action="action_partner_wizard"
+            sequence="600"/>
+    </data>
+</odoo>

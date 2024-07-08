@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_loan_line_view_pivot" model="ir.ui.view">
+        <field name="name">hr.loan.line.view.pivot</field>
+        <field name="model">hr.loan.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Loan Analysis" disable_linking="true">
+                <field name="employee_id" type="row"/>
+                <field name="date" interval="month" type="col"/>
+                <field name="amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="hr_loan_line_view_graph" model="ir.ui.view">
+        <field name="name">hr.loan.line.view.graph</field>
+        <field name="model">hr.loan.line</field>
+        <field name="arch" type="xml">
+            <graph string="Loan Graph" type="bar">
+                <field name="employee_id" />
+                <field name="amount" type="measure" />
+            </graph>
+        </field>
+    </record>
+
+    <record id="hr_loan_line_analysis_action" model="ir.actions.act_window">
+        <field name="name">Loan Analysis</field>
+        <field name="res_model">hr.loan.line</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="search_view_id" ref="arkana_loan_management.hr_loan_line_search"/>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p/>  
+        </field>
+    </record>
+
+    <record id="hr_loan_line_analysis_action_pivot" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">pivot</field>
+        <field name="act_window_id" ref="hr_loan_line_analysis_action"/>
+        <field name="view_id" ref="hr_loan_line_view_pivot"/>
+    </record> 
+
+    <record id="hr_loan_line_analysis_action_graph" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">graph</field>
+        <field name="act_window_id" ref="hr_loan_line_analysis_action"/>
+        <field name="view_id" ref="hr_loan_line_view_graph"/>
+    </record> 
+</odoo>

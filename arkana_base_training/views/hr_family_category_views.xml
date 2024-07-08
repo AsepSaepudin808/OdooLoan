@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <record id="hr_family_category_view_tree" model="ir.ui.view">
+        <field name="name">hr.family.category.view.tree</field>
+        <field name="model">hr.family.category</field>
+        <field name="arch" type="xml">
+                    <tree string="Family Category" default_order="company_id asc, name asc" edit="1" editable="bottom" multi_edit="1">
+                        <field name="name"/>
+                        <field name="family_status" required="1"/>
+                        <field name="number" required="1"/>
+                        <field name="average_effective_rate_id" required="1" options="{'no_create' : True,'no_open' : True}"/>
+                        <field name="ptkp_amount" options="{'currancy_field' : True,'curancy_id' : True}"/>
+                        <field name="mark_as_married_state"/>
+                        <field name="active" optional="hide" force_save="1" readonly="1"/>
+                        <field name="company_id" optional="hide" force_save="1" readonly="1"/>
+                        <field name="currency_id" optional="hide" force_save="1" readonly="1"
+                                options="{'no_create' : True,'no_open' : True}"/>
+                    </tree>
+        </field>
+    </record>   
+    
+    <record id="hr_family_category_action" model="ir.actions.act_window">
+        <field name="name">Family Category</field>
+        <field name="res_model">hr.family.category</field>
+        <field name="view_mode">tree</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p/>
+        </field>
+    </record>
+    <record id="hr_family_category_action_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="act_window_id" ref="hr_family_category_action"/>
+        <field name="view_id" ref="hr_family_category_view_tree"/>
+    </record>
+    <menuitem id="menu_hr_family_category" 
+    name="Family Category" 
+    action="hr_family_category_action" 
+    parent="hr.menu_config_employee"  
+    sequence="99" 
+    groups="hr.group_hr_manager"/> 
+</odoo>

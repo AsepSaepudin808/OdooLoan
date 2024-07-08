@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    
+    <menuitem
+        id="loan_management_menu_root"
+        name="Loan Management"
+        groups="arkana_loan_management.group_loan_management_user"
+        web_icon="arkana_loan_management,static/description/loan_management.png"
+        sequence="15"/>
+        
+    <menuitem
+        id="loan_management_menu_main"
+        name="Loans"
+        parent="loan_management_menu_root"
+        groups="arkana_loan_management.group_loan_management_user"
+        sequence="5"/>
+
+    <menuitem
+        id="loan_management_kasbon_menu_main"
+        name="Kasbon"
+        action="hr_loan_kasbon_action"
+        parent="loan_management_menu_main"
+        groups="arkana_loan_management.group_loan_management_user"
+        sequence="10"/>
+
+    <menuitem
+        id="loan_managment_loan_menu_main"
+        name="Loan Long Term"
+        action="hr_loan_loan_action"
+        parent="loan_management_menu_main"
+        groups="arkana_loan_management.group_loan_management_user"
+        sequence="15"/>
+
+        <menuitem
+        id="loan_management_menu_reporting"
+        name="Reporting"
+        parent="loan_management_menu_root"
+        groups="arkana_loan_management.group_loan_management_finance,arkana_loan_management.group_loan_management_administrator"
+        sequence="600"/>
+
+        <menuitem
+        id="loan_management_loan_reporting"
+        name="Loan Analysis"
+        action="hr_loan_line_analysis_action"
+        parent="loan_management_menu_reporting"
+        groups="arkana_loan_management.group_loan_management_finance,arkana_loan_management.group_loan_management_administrator"
+        sequence="10"/>
+
+</odoo>

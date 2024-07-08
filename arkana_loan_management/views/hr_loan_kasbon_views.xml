@@ -1,0 +1,196 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    
+    <record id="hr_loan_kasbon_view_tree" model="ir.ui.view">
+        <field name="name">hr.loan.view.tree</field>
+        <field name="model">hr.loan</field>
+        <field name="arch" type="xml">
+            <tree string="Loan Management" decoration-success="state in ['approved', 'done']" 
+                decoration-info="state == 'draft'" decoration-danger="state == 'rejected'">
+                
+                <field name="name"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="employee_id" readonly="1"/>
+                <field name="department_id" readonly="1"/>
+                <field name="loan_approver_id" readonly="1"/>
+                <field name="manager_id" readonly="1"/>
+                <field name="loan_type" widget="badge" decoration-success="loan_type in ['petty_cash']" 
+                    decoration-warning="loan_type in ['loan']"/>
+
+                <field name="limit_amount" options="{'currency_field' : 'currency_id'}"/>
+                <field name="total_amount" options="{'currency_field' : 'currency_id'}"/>
+                <field name="residual_amount" options="{'currency_field' : 'currency_id'}"/>
+
+                <field name="state" widget="badge" decoration-success="state in ['approved', 'done']" 
+                    decoration-info="state == 'draft'" decoration-warning="state == 'confirm'" 
+                    decoration-danger="state == 'rejected'"/>
+
+                <field name="create_uid" optional="show" force_save="1" readonly="1" 
+                    options="{'no_open': True, 'no_create': True}"/>
+
+                <field name="currency_id" invisible="1"/>
+                <field name="company_id" optional="hide" readonly="1"/>
+
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_loan_kasbon_view_form" model="ir.ui.view">
+        <field name="name">hr.loan.view.form</field>
+        <field name="model">hr.loan</field>
+        <field name="arch" type="xml">
+            <form string="Loan Detail">
+
+                <header>
+                    <field name="is_approver" invisible="1" force_save="1"  readonly="1"/>
+                    <button string="Confirm" name="action_confirm"  type="object" class="oe_highlight" states="draft"/>
+                    <button string="Set to Draft" name="action_set_to_draft" type="object" class="oe_hinghlight" states="confirm,rejected"/>
+                    <button string="Approve" name="action_approve" type="object" class="oe_highlight"
+                            attrs="{'invisible':['|', ('state', '!=', 'confirm'), ('is_approver', '=', False)]}"/>
+                    <button name="action_rejected" string="Rejected" type="object"
+                            class="btn btn-danger text-upercase font-weight-bold"
+                            attrs="{'invisible':['|', ('state','!=', 'confirm'), ('is_approver', '=', False)]}"/>
+                    <button name="action_loan_report" string="Loan Report" type="object" class="oe_highlight" states="approved,done"/>
+                    <button name="action_open_loan_report" string="Open Loan Report" type="object" class="btn btn-secondary font-weight-bold text-uppercase" states="approved,done"/>
+                    
+                    
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,approved,done,rejected"/>
+                </header>
+
+                <sheet>
+
+                    <div class="oe_button_box" name="button_box" attrs="{'invisible':[('state', '!=', 'approved')]}">
+                        <button name="action_load_loan_details" type="object" class="oe_stat_button" icon="fa-info">
+                            <field name="loan_line_count" string="Loan Details" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <field name="residual_amount_percentage" invisible="1"/>
+                    <div class="alert alert-warning" role="alert"
+                    attrs="{'invisible':['|',('residual_amount_percentage', '&gt;=', 0.20), 
+                                            ('residual_amount_percentage', '&lt;=', 0.00)]}">
+                    <strong> 
+                        Your Residual Amount : <field name="residual_amount" force_save="1" readonly="1"
+                        options="{'currency_field' : 'currency_id'}" attrs="{'invisible':[('state','=', 'draft')]}"/>
+                    </strong>
+                    </div>
+
+                    <div class="alert alert-danger" role="alert"
+                        attrs="{'invisible':[('residual_amount_percentage', '&gt;', '0.00')]}">
+                        <strong/>
+                        Your Residual Amount : <field name="residual_amount" force_save="1" readonly="1"
+                        options="{'currency_field' : 'currency_id'}" attrs="{'invisible':[('state','=', 'draft')]}"/>
+                        <strong/>
+                    </div>
+
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name"
+                            force_save="1" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <group string="General Information" name="general_information">
+                        <group>
+                            <field name="loan_type" required="1" readonly="1"/>
+                            <label for="start_date" string="Period"/>
+                            <div>
+                                <field name="start_date" required="1" class="oe_inline" attrs="{'readonly': [('state', '!=', 'draft')]}"/> - 
+                                <field name="end_date" required="1" class="oe_inline" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            </div>
+                            <field name="employee_id" required="1" options="{'no_create' : True, 'no_open' : True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="department_id" force_save="1" readonly="1" options="{'no_create' : True, 'no_open' : True}"/>
+                            <field name="manager_id" force_save="1" readonly="1" options="{'no_create' : True, 'no_open' : True}"/>
+                            <field name="loan_approver_id" required="1" force_save="1" readonly="1" options="{'no_create' : True, 'no_open' : True}" attrs="{'readonly': [('state', '=', 'draft')]}"/>
+                        </group>
+
+                        <group>
+                            <field name="limit_amount" force_save="1" readonly="1" 
+                                options="{'currency_field' : 'currency_id'}"/>
+
+                            <field name="total_amount" force_save="1" readonly="1"
+                                options="{'currency_field' : 'currency_id'}"/>
+
+                            <field name="residual_amount" force_save="1" readonly="1"
+                                options="{'currency_field' : 'currency_id'}"/>
+
+                            <field name="currency_id" force_save="1" readonly="1" invisible="1"
+                                options="{'no_create' : True, 'no_open' : True}"/>
+                                
+                            <field name="company_id" force_save="1" readonly="1" invisible="1"
+                                options="{'no_create' : True, 'no_open' : True}"/>
+                        </group>
+                    </group>
+                </sheet>
+
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="hr_loan_view_search" model="ir.ui.view">
+        <field name="name">hr.loan.view.search</field>
+        <field name="model">hr.loan</field>
+        <field name="arch" type="xml">
+            <search string="Loan Search">
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="loan_approver_id"/>
+                <field name="department_id"/>
+                <field name="manager_id"/>
+                <separator/>
+
+                <filter name="draft_state" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <filter name="confirm_state" string="Confirm" domain="[('state', '=', 'confirm')]"/>
+                <filter name="approved_state" string="Approved" domain="[('state', '=', 'approved')]"/>
+                <filter name="done_state" string="Done" domain="[('state', '=', 'done')]"/>
+                <filter name="rejected_state" string="Rejected" domain="[('state', '=', 'rejected')]"/>
+                <separator/>
+
+                <filter name="last_month" string="Last Month" domain="['&amp;', ('start_date', '&gt;=', (context_today() + relativedelta(months=-1, day=1)).strftime('%Y-%m-%d')), ('start_date', '&lt;=', (context_today() + relativedelta(day=1, days=-1)).strftime('%Y-%m-%d'))]"/>
+                <filter name="month" string="This Month" domain="['&amp;', ('start_date', '&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d')), ('start_date', '&lt;=', (context_today() + relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+
+                <group expand="0" string="Group By">
+                    <filter string="Employee" name="group_by_employee_id" domain="[]" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Manager" name="group_by_manager_id" domain="[]" context="{'group_by': 'manager_id'}"/>
+                    <filter string="Loan Approver" name="group_by_loan_approver_id" domain="[]" context="{'group_by': 'loan_approver_id'}" />
+                    <filter string="Department" name="group_by_department_id" domain="[]" context="{'group_by': 'department_id'}"/>
+                    <filter string="Date" name="group_by_start_date" domain="[]" context="{'group_by': 'start_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_loan_kasbon_action" model="ir.actions.act_window">
+        <field name="name">Loan Management</field>
+        <field name="res_model">hr.loan</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('loan_type', '=', 'petty_cash')]</field>
+        <field name="context">{'default_loan_type' : 'petty_cash'}</field>
+        <field name="help" type="html">
+            <p/>
+        </field>
+    </record>
+
+    <record id="hr_loan_kasbon_action_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="act_window_id" ref="hr_loan_kasbon_action"/>
+        <field name="view_id" ref="hr_loan_kasbon_view_tree"/>
+    </record>
+
+    <record id="hr_loan_kasbon_action_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">form</field>
+        <field name="act_window_id" ref="hr_loan_kasbon_action"/>
+        <field name="view_id" ref="hr_loan_kasbon_view_form"/>
+    </record>
+
+</odoo>

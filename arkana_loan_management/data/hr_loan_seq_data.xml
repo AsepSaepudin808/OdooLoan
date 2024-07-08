@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+            <record model="ir.sequence" id="hr_loan_kasbon_sequence" >
+                <field name="name">HR Loan Kasbon Sequence</field>
+                <field name="code">hr.loan.kasbon.sequence</field>
+                <field name="prefix">LOAN-PC-%(month)s-%(y)s-</field>
+                <field name="padding">5</field>
+                <field name="company_id" eval="False"/>
+            </record>
+            <record model="ir.sequence" id="hr_loan_loan_sequence" >
+                <field name="name">HR Loan Loan Sequence</field>
+                <field name="code">hr.loan.loan.sequence</field>
+                <field name="prefix">LOAN-LT-%(month)s-%(y)s-</field>
+                <field name="padding">5</field>
+                <field name="company_id" eval="False"/>
+            </record>
+
+            
+
+
+</odoo>

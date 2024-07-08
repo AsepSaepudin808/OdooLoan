@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_loan_line_cron" model="ir.cron">
+        <field name="name">Auto Confirm Loan Long Term Cron</field>
+        <field name="model_id" ref="model_hr_loan_line"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">months</field>
+        <field name="numbercall">-1</field>
+        <field name="state">code</field>
+        <field name="priority">5</field>
+        <field name="code">model._confirm_loan_details()</field>
+        <field name="nextcall" eval="(datetime.now().replace(day=2)).strftime('%Y-%m-%d 18:00:00')"/>
+    </record>
+
+</odoo>

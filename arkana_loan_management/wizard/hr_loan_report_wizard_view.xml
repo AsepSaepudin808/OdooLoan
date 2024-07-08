@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- view form -->
+    <record id="hr_loan_report_wizard_view_form" model="ir.ui.view">
+        <field name="name">hr.loan.report.wizard.view.form</field>
+        <field name="model">hr.loan.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Export Loan Report">
+                    <group>
+                        <field name="company_id" invisible="1" force_save="1" readonly="1"/>
+                        <field name="employee_ids" widget="many2many_tags"
+                                options="{'no_open': True, 'no_create': True}" required="1"/>
+                        <field name="loan_type" widget="radio" required="1" />
+                        <field name="include_details"/>
+                    </group>
+                    <footer>
+                        <button string="Export" name="action_export_loan_report" type="object" class="oe_highlight"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- action -->
+    <record id="hr_loan_report_wizard_action" model="ir.actions.act_window">
+        <field name="name">HR Loan Export</field>
+        <field name="res_model">hr.loan.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem
+    id="hr_loan_export_menu"
+    name="Loan Export"
+    parent="arkana_loan_management.loan_management_menu_reporting"
+    action="hr_loan_report_wizard_action"
+    groups="arkana_loan_management.group_loan_management_finance,arkana_loan_management.group_loan_management_administrator"
+    sequence="600"/>
+
+</odoo>
